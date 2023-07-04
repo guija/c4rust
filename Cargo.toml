@@ -10,5 +10,5 @@ exclude = ["/examples", ".gitignore", "index.html"]
 petgraph = "0.6.3"
 
 [[example]]
-name = "vyoma"
-path = "examples/vyoma/src/main.rs"
+name = "company"
+path = "examples/company/src/main.rs"
