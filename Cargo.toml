@@ -1,0 +1,14 @@
+[package]
+name = "c4rust"
+version = "0.1.0"
+edition = "2021"
+exclude = ["/examples", ".gitignore", "index.html"]
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+petgraph = "0.6.3"
+
+[[example]]
+name = "vyoma"
+path = "examples/vyoma/src/main.rs"
