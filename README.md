@@ -14,3 +14,4 @@ Model your c4 architecture using the programming language Rust
 ## Example usage
 
 - `cargo r --example company | dot -Tpng > container.png && eog container.png`
+- `cargo r --example company | dot -Tsvg > container.svg && firefox container.svg`
