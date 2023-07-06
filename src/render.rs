@@ -1,15 +1,12 @@
 use std::collections::HashSet;
 
-use petgraph::{dot::Dot, stable_graph::NodeIndex, Graph};
+use petgraph::dot::Dot;
 
-use crate::core::{self, Edge, EdgeType, Element, ModelType, Project};
+use crate::core::{self, C4Graph, C4Index, EdgeType, ModelType, Project};
 
-pub fn default_dot(project: &core::Project) -> String {
+pub fn debug_dot(project: &core::Project) -> String {
     format!("{:?}", Dot::with_config(&project.graph, &[]))
 }
-
-type C4Graph = Graph<Element, Edge>;
-type C4Index = NodeIndex;
 
 pub fn dot_container_view(project: &Project) {
     println!("digraph {{");
@@ -19,7 +16,7 @@ pub fn dot_container_view(project: &Project) {
 
     let graph = &project.graph;
 
-    let containers: HashSet<NodeIndex> = graph
+    let containers: HashSet<C4Index> = graph
         .node_indices()
         .filter(|idx| graph.node_weight(*idx).unwrap().model_type == ModelType::Container)
         .collect();
@@ -27,9 +24,10 @@ pub fn dot_container_view(project: &Project) {
     for container_index in &containers {
         let container = graph.node_weight(*container_index).unwrap();
         // TODO GJA move registering nodes in dot into a method because we will need it in a lot of places.
-        let shape = "box"; // TODO GJA introduce method
+        let shape = "box"; // TODO GJA introduce method, but before that we need group of containers
         let href = ""; // TODO GJA reference to container view
-        let dot_node_string = format!("\t\"{}\" [label=<<B>{}</B><BR/>[{}]<BR/><BR/>{}> shape={} fontname=Helvetica fontsize=12 margin=\"0.3,0.1\" fillcolor=\"#{}\" color=\"#{}\" fontcolor=white style=filled {}]", container_index.index(), container.name, container.model_type.to_string(), "TODO description", shape, background_color(container.model_type), border_color(container.model_type), href);
+        let description = split_into_multiple_lines_max_n_words_per_line(&container.description, 3);
+        let dot_node_string = format!("\t\"{}\" [label=<<B>{}</B><BR/>[{}]<BR/><BR/>{}> shape={} fontname=Helvetica fontsize=12 margin=\"0.3,0.1\" fillcolor=\"#{}\" color=\"#{}\" fontcolor=white style=filled {}]", container_index.index(), container.name, container.model_type.to_string(), description, shape, background_color(container.model_type), border_color(container.model_type), href);
         println!("{}", dot_node_string);
     }
 
@@ -59,6 +57,19 @@ pub fn dot_container_view(project: &Project) {
     }
 
     println!("}}");
+}
+
+fn split_into_multiple_lines_max_n_words_per_line(text: &str, max_words_per_line: usize) -> String {
+    let mut description = String::new();
+    for (i, word) in text.split_whitespace().enumerate() {
+        description.push_str(word);
+        if (i + 1) % max_words_per_line == 0 {
+            description.push_str("<BR/>");
+        } else {
+            description.push_str(" ");
+        }
+    }
+    description
 }
 
 fn background_color(model_type: ModelType) -> &'static str {
