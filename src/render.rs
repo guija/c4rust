@@ -12,8 +12,6 @@ type C4Graph = Graph<Element, Edge>;
 type C4Index = NodeIndex;
 
 pub fn dot_container_view(project: &Project) {
-    // Gehe ueber alle Knoten welche container sind und fuege sie zum graph hinzu
-
     println!("digraph {{");
     println!("graph [pad=\"0.5\", nodesep=\"2\", ranksep=\"2\"];");
     println!("splines=\"true\";");
@@ -25,8 +23,6 @@ pub fn dot_container_view(project: &Project) {
         .node_indices()
         .filter(|idx| graph.node_weight(*idx).unwrap().model_type == ModelType::Container)
         .collect();
-
-    // add nodes to dot
 
     for container_index in &containers {
         let container = graph.node_weight(*container_index).unwrap();
