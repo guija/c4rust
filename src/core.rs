@@ -1,18 +1,18 @@
-use petgraph::dot::Dot;
 use petgraph::graph::DiGraph;
 use petgraph::stable_graph::NodeIndex;
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum ModelType {
     Component,
     Container,
     System,
+    ExternalSystem,
 }
 
 #[derive(Debug, Clone)]
 pub struct Element {
-    name: String,
-    model_type: ModelType,
+    pub name: String,
+    pub model_type: ModelType,
 }
 
 impl Element {
