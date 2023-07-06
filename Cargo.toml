@@ -10,6 +10,6 @@ autoexamples = false
 [dependencies]
 petgraph = "0.6.3"
 
-[[example]]
-name = "company"
-path = "examples/company/src/main.rs"
+#[[example]]
+#name = "company"
+#path = "examples/company/src/main.rs"
