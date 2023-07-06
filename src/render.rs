@@ -15,6 +15,9 @@ pub fn dot_container_view(project: &Project) {
     // Gehe ueber alle Knoten welche container sind und fuege sie zum graph hinzu
 
     println!("digraph {{");
+    println!("graph [pad=\"0.5\", nodesep=\"2\", ranksep=\"2\"];");
+    println!("splines=\"true\";");
+    println!("splines=ortho;");
 
     let graph = &project.graph;
 
@@ -27,12 +30,11 @@ pub fn dot_container_view(project: &Project) {
 
     for container_index in &containers {
         let container = graph.node_weight(*container_index).unwrap();
-        // TODO GJA move this into a method because we will need it in a lot of places.
-        println!(
-            "\t{} [label=\"{}\"]",
-            container_index.index(),
-            container.name
-        );
+        // TODO GJA move registering nodes in dot into a method because we will need it in a lot of places.
+        let shape = "box"; // TODO GJA introduce method
+        let href = ""; // TODO GJA reference to container view
+        let dot_node_string = format!("\t\"{}\" [label=<<B>{}</B><BR/>[{}]<BR/><BR/>{}> shape={} fontname=Helvetica fontsize=12 margin=\"0.3,0.1\" fillcolor=\"#{}\" color=\"#{}\" fontcolor=white style=filled {}]", container_index.index(), container.name, container.model_type.to_string(), "TODO description", shape, background_color(container.model_type), border_color(container.model_type), href);
+        println!("{}", dot_node_string);
     }
 
     // get all the edges that go either from a container to another container or from a container into an external system
@@ -55,12 +57,9 @@ pub fn dot_container_view(project: &Project) {
     for idx in edges {
         let (start_idx, end_idx) = graph.edge_endpoints(idx).unwrap();
         let edge = graph.edge_weight(idx).unwrap();
-        println!(
-            "\t{} -> {} [label=\"{}\"]",
-            start_idx.index(),
-            end_idx.index(),
-            edge.description
-        );
+        let edge_style = "solid"; // TODO GJA introduce notion of async with "dashed" style
+        let dot_edge = format!("\"{}\" -> \"{}\" [xlabel=\"{}\" style={} fontname=Helvetica fontsize=11 color=\"#707070\"]", start_idx.index(), end_idx.index(), edge.description, edge_style);
+        println!("{}", dot_edge);
     }
 
     println!("}}");
@@ -72,6 +71,15 @@ fn background_color(model_type: ModelType) -> &'static str {
         ModelType::Component => "438DD5",
         ModelType::ExternalSystem => "999999",
         ModelType::System => "1168BD",
+    }
+}
+
+fn border_color(model_type: ModelType) -> &'static str {
+    match model_type {
+        ModelType::Container => "3C7FC0",
+        ModelType::Component => "3C7FC0",
+        ModelType::ExternalSystem => "8A8A8A",
+        ModelType::System => "0F5EAA",
     }
 }
 

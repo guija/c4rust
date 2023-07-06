@@ -1,3 +1,5 @@
+use std::fmt;
+
 use petgraph::graph::DiGraph;
 use petgraph::stable_graph::NodeIndex;
 
@@ -7,6 +9,14 @@ pub enum ModelType {
     Container,
     System,
     ExternalSystem,
+}
+
+impl fmt::Display for ModelType {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{:?}", self)
+        // or, alternatively:
+        // fmt::Debug::fmt(self, f)
+    }
 }
 
 #[derive(Debug, Clone)]
