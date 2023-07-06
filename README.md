@@ -2,6 +2,8 @@
 
 Model your c4 architecture using the programming language Rust
 
+[![Rust](https://github.com/guija/c4rust/actions/workflows/rust.yml/badge.svg)](https://github.com/guija/c4rust/actions/workflows/rust.yml)
+
 ## Build and test
 
 - Compile: `cargo b`
